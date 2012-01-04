@@ -2,27 +2,28 @@
 
 namespace EasyCSV\Tests;
 
-require_once __DIR__ . '/TestInit.php';
-
 class ReaderTest extends \PHPUnit_Framework_TestCase
 {
-    private $_reader;
+    private $reader;
 
     public function setUp()
     {
-        $this->_reader = new \EasyCSV\Reader(__DIR__ . '/read.csv');
+        $this->reader = new \EasyCSV\Reader(__DIR__ . '/read.csv');
     }
 
     public function testOneAtAtime()
     {
-        while($row = $this->_reader->getRow()) {
-            $this->assertTrue(is_array($row));
-            $this->assertEquals(3, count($row));
-        }
+    	$expected = new \stdClass;
+    	$expected->column1 = '1column2value';
+    	$expected->column2 = '1column3value';
+    	$expected->column3 = '1column4value';
+
+        $row = $this->reader->getRow();
+        $this->assertEquals($expected, $row);
     }
 
     public function testGetAll()
     {
-        $this->assertEquals(5, count($this->_reader->getAll()));
+        $this->assertCount(5, $this->reader->getAll());
     }
 }
