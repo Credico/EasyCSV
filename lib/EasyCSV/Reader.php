@@ -22,7 +22,13 @@ class Reader extends AbstractBase
 				$this->_headers = $row;
 				return $this->getRow();
 			} else {
-				return array_combine($this->_headers, $row);
+				$result = array_combine($this->_headers, $row);
+				foreach($this->_headers as $header) {
+					if(empty($header)) {
+						unset($result[$header]);
+					}
+				}
+				return $result;
 			}
 		} else {
 			return false;
