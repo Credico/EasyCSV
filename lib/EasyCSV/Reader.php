@@ -7,9 +7,9 @@ class Reader extends AbstractBase
     private $_headers;
     private $_line;
 
-    public function __construct($path, $mode = 'r+')
+    public function __construct($path, $delimiter = ',', $mode = 'r+')
     {
-        parent::__construct($path, $mode);
+        parent::__construct($path, $delimiter, $mode);
         $this->_line    = 0;
     }
 
