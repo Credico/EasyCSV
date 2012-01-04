@@ -2,17 +2,13 @@
 
 namespace EasyCSV\Tests;
 
+use EasyCSV\Reader;
+
 class ReaderTest extends \PHPUnit_Framework_TestCase
 {
-    private $reader;
-
-    public function setUp()
-    {
-        $this->reader = new \EasyCSV\Reader(__DIR__ . '/read.csv');
-    }
-
     public function testOneAtAtime()
     {
+    	$this->reader = new Reader(__DIR__ . '/read.csv');
     	$expected = array(
     		'column1' => '1column2value',
     		'column2' => '1column3value',
@@ -25,6 +21,30 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAll()
     {
+    	$this->reader = new Reader(__DIR__ . '/read.csv');
         $this->assertCount(5, $this->reader->getAll());
     }
+
+    /** 
+     * @test
+     * @expectedException EasyCSV\MalformedCsvException
+     */
+	public function FailOnMalformedCsv()
+	{
+		$this->reader = new Reader(__DIR__ . '/tooManyColumns.csv');
+		$this->reader->setDebug(true);
+		$this->reader->getAll();
+	} 
+	
+    /** 
+     * @test
+     */
+	public function MalformedCsvIsCleanedUp()
+	{
+		$this->reader = new Reader(__DIR__ . '/tooManyColumns.csv');
+		$this->reader->setDebug(false);
+		$rows = $this->reader->getAll();
+		var_dump(__FILE__.' -- '.__LINE__.' -- '.__METHOD__, $rows);die;
+		$this->assertCount(5, $rows);
+	} 
 }
