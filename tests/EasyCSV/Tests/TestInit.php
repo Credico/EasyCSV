@@ -4,8 +4,7 @@ namespace EasyCSV\Tests;
 
 error_reporting(E_ALL | E_STRICT);
 
-require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/TextUI/TestRunner.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 require_once __DIR__ . '/../../../lib/EasyCSV/ClassLoader.php';
 
 $classLoader = new \EasyCSV\ClassLoader('EasyCSV');
