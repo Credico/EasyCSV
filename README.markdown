@@ -1,5 +1,8 @@
 # EasyCSV
 
+[![Build Status](https://secure.travis-ci.org/Credico/EasyCSV.png)](v)
+
+
 Set of PHP 5.3 classes for reading and writing CSV files.
 
 ## Reader
