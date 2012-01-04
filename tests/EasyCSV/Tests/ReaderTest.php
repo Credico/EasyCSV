@@ -13,10 +13,11 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testOneAtAtime()
     {
-    	$expected = new \stdClass;
-    	$expected->column1 = '1column2value';
-    	$expected->column2 = '1column3value';
-    	$expected->column3 = '1column4value';
+    	$expected = array(
+    		'column1' => '1column2value',
+    		'column2' => '1column3value',
+    		'column3' => '1column4value',
+    	);
 
         $row = $this->reader->getRow();
         $this->assertEquals($expected, $row);
