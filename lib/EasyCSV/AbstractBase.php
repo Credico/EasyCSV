@@ -5,15 +5,15 @@ namespace EasyCSV;
 abstract class AbstractBase
 {
 	protected $_handle;
-	protected $_delimiter = ',';
-	protected $_enclosure = '"';
+	protected $delimiter = ',';
+	protected $enclosure = '"';
 
 	public function __construct($path, $delimiter = ',', $mode = 'r+')
 	{
 		if ( ! file_exists($path)) {
 			touch($path);
 		}
-		$this->_delimiter = $delimiter;
+		$this->delimiter = $delimiter;
 		$this->_handle = fopen($path, $mode);
 	}
 
@@ -24,8 +24,4 @@ abstract class AbstractBase
 		}
 	}
 
-	public function setDelimiter($delimiter)
-	{
-		$this->_delimiter = $delimiter;
-	}
 }

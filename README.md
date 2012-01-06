@@ -9,7 +9,7 @@ Set of PHP 5.3 classes for reading and writing CSV files.
 
 To read CSV files we need to instantiate the EasyCSV reader class:
 
-    $reader = new \EasyCSV\Reader('read.csv');
+    $reader = new \EasyCSV\Reader('read.csv', array('column1', 'column2');
 
 You can iterate over the rows one at a time:
 

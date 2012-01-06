@@ -4,10 +4,11 @@ namespace EasyCSV;
 
 class Writer extends AbstractBase
 {
-	public function __construct($path, $delimiter = ',', $mode = 'w+')
+	private $line = 0;
+	
+	public function __construct($path, $delimiter = ',')
 	{
-		parent::__construct($path, $delimiter, $mode);
-		$this->_line    = 0;
+		parent::__construct($path, $delimiter, 'w+');
 	}
 
 	public function writeRow($row)
@@ -19,11 +20,11 @@ class Writer extends AbstractBase
 		$row = array_map(function($key) {
 			return mb_check_encoding($key, 'UTF-8') ? $key : utf8_encode($key);
 		}, $row);
-		if ($this->_line == 0) {
-			fputcsv($this->_handle, array_keys($row), $this->_delimiter, $this->_enclosure);
+		if ($this->line == 0) {
+			fputcsv($this->_handle, array_keys($row), $this->delimiter, $this->enclosure);
 		}
-		$this->_line++;
-		return fputcsv($this->_handle, $row, $this->_delimiter, $this->_enclosure);
+		$this->line++;
+		return fputcsv($this->_handle, $row, $this->delimiter, $this->enclosure);
 	}
 
 	public function writeFromArray(array $array)
@@ -35,6 +36,6 @@ class Writer extends AbstractBase
 
 	public function getLineCount()
 	{
-		return $this->_line;
+		return $this->line;
 	}
 }

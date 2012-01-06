@@ -4,14 +4,17 @@ namespace EasyCSV;
 
 class Reader extends AbstractBase
 {
-	private $_headers;
-	private $_line = 0;
+	private $headers;
+	private $line = 0;
 	private $debug;
 
-	public function __construct($path, $delimiter = ',', $mode = 'r+')
+	public function __construct($path, array $headers, $delimiter = ',', $firstLineIsHeader = true)
 	{
-		parent::__construct($path, $delimiter, $mode);
-		$this->_headers = $this->fetchRow();
+		parent::__construct($path, $delimiter, 'r+');
+		$this->headers = $headers;
+		if($firstLineIsHeader) {
+			$this->fetchRow();
+		}
 
 	}
 
@@ -20,44 +23,33 @@ class Reader extends AbstractBase
 		$this->debug = $bool;
 	}
 
+	/** @return array */
 	private function fetchRow()
 	{
-		$row = fgetcsv($this->_handle, 4096, $this->_delimiter, $this->_enclosure);
+		$row = fgetcsv($this->_handle, 4096, $this->delimiter, $this->enclosure);
 		if($row !== false) {
 			$row = array_map('trim', $row);
-			$this->_line++;
+			$this->line++;
 		}
 		return $row;
 	}
 
 	private function mapToHeaders(array $row)
 	{
-		if(count($this->_headers) != count($row)) {
+		if(count($this->headers) != count($row)) {
 			if($this->debug) {
-				throw new MalformedCsvException("The number of columns doesn't match");
+				throw new MalformedCsvException(sprintf("Line %s has more columns than the amount of headers", $this->line));
 			} else {
-				$row = array_splice($row, 0, count($this->_headers)); // cut the rows if there's too many
+				$row = array_splice($row, 0, count($this->headers)); // cut the rows if there's too many
 			}
 		}
-		return array_combine($this->_headers, $row);
-	}
-
-	private function removeEmptyColumnHeaders(array $row)
-	{
-		foreach($this->_headers as $header) {
-			// remove columns with empty headers
-			if(empty($header)) {
-				unset($row[$header]);
-			}
-		}
-		return $row;
+		return (object) array_combine($this->headers, $row);
 	}
 
 	public function getRow()
 	{
 		if (($row = $this->fetchRow()) !== false) {
 			$row = $this->mapToHeaders($row);
-			$row = $this->removeEmptyColumnHeaders($row);
 		}
 		return $row;
 	}
@@ -73,6 +65,6 @@ class Reader extends AbstractBase
 
 	public function getLineNumber()
 	{
-		return $this->_line;
+		return $this->line;
 	}
 }

@@ -19,7 +19,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
 
     public function testReadWrittenFile()
     {
-        $reader = new \EasyCSV\Reader(__DIR__ . '/write.csv');
+        $reader = new \EasyCSV\Reader(__DIR__ . '/write.csv', array('col1', 'col2', 'col3'));
         $results = $reader->getAll();
         
         $this->assertCount(3, $results);

@@ -6,44 +6,54 @@ use EasyCSV\Reader;
 
 class ReaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testOneAtAtime()
+	/**
+	* @test
+	*/
+    public function GetsARow()
     {
-    	$this->reader = new Reader(__DIR__ . '/read.csv');
-    	$expected = array(
-    		'column1' => '1column2value',
-    		'column2' => '1column3value',
-    		'column3' => '1column4value',
-    	);
+    	$reader = new Reader(__DIR__.'/read.csv', array('col1', 'col2', 'col3'));
+    	$expected = new \stdClass;
+    	$expected->col1 = 'A1';
+    	$expected->col2 = 'A2';
+    	$expected->col3 = 'A3';
 
-        $row = $this->reader->getRow();
-        $this->assertEquals($expected, $row);
+        $this->assertEquals($expected, $reader->getRow());
     }
 
-    public function testGetAll()
+    /**
+    * @test
+    */
+    public function GetsAllRows()
     {
-    	$this->reader = new Reader(__DIR__ . '/read.csv');
-        $this->assertCount(5, $this->reader->getAll());
+    	$reader = new Reader(__DIR__.'/read.csv', array('col1', 'col2', 'col3'));
+        $this->assertCount(5, $reader->getAll());
     }
 
     /** 
      * @test
      * @expectedException EasyCSV\MalformedCsvException
      */
-	public function FailOnMalformedCsv()
+	public function FailsOnMalformedCsv()
 	{
-		$this->reader = new Reader(__DIR__ . '/tooManyColumns.csv');
-		$this->reader->setDebug(true);
-		$this->reader->getAll();
+		$reader = new Reader(__DIR__ . '/tooManyColumns.csv', array('col1', 'col2', 'col3'));
+		$reader->setDebug(true);
+		$reader->getAll();
 	} 
 	
     /** 
      * @test
      */
-	public function MalformedCsvIsCleanedUp()
+	public function CleansUpMalformedCsv()
 	{
-		$this->reader = new Reader(__DIR__ . '/tooManyColumns.csv');
-		$this->reader->setDebug(false);
-		$rows = $this->reader->getAll();
-		$this->assertCount(5, $rows);
-	} 
+		$reader = new Reader(__DIR__ . '/tooManyColumns.csv', array('col1', 'col2', 'col3'));
+		$reader->setDebug(false);
+		$this->assertCount(5, $reader->getAll());
+	}
+
+	/** @test */
+	public function HeaderlessCsv()
+	{
+		$reader = new Reader(__DIR__.'/read.csv', array('col1', 'col2', 'col3'), ',', false);
+		$this->assertCount(6, $reader->getAll());
+	}
 }
