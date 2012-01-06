@@ -44,7 +44,6 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 		$this->reader = new Reader(__DIR__ . '/tooManyColumns.csv');
 		$this->reader->setDebug(false);
 		$rows = $this->reader->getAll();
-		var_dump(__FILE__.' -- '.__LINE__.' -- '.__METHOD__, $rows);die;
 		$this->assertCount(5, $rows);
 	} 
 }
