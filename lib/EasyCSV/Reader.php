@@ -19,8 +19,11 @@ class Reader extends AbstractBase
 	public function __construct($path, array $headers, $delimiter = ',', $firstLineIsHeader = true, array $fixedWidths = null)
 	{
 		parent::__construct($path, $delimiter, 'r+');
-		$this->headers = $headers;
 		
+		if(is_array($fixedWidths) && count($headers) != count($fixedWidths) ) {
+			throw new \Exception("The number of headers doesn't match the number of fixed width columns");
+		}
+		$this->headers = $headers;
 		$this->fixedWidths = $fixedWidths;
 		
 		if($firstLineIsHeader) {
@@ -38,12 +41,14 @@ class Reader extends AbstractBase
 	{
 		if($this->fixedWidths) 
 		{
-			$row = array();
-			$record = fgets($this->_handle, 4096);
-			$offset = 0;
-			foreach($this->fixedWidths as $width) {
-				$row[] = substr($record, $offset, $width);
-				$offset += $width + strlen($this->delimiter);
+			$row = false;
+			if(false !== $record = fgets($this->_handle)) {
+				$row = array();
+				$offset = 0;
+				foreach($this->fixedWidths as $width) {
+					$row[] = substr($record, $offset, $width);
+					$offset += $width + strlen($this->delimiter);
+				}
 			}
 		} else {
 			$row = fgetcsv($this->_handle, 4096, $this->delimiter, $this->enclosure);
@@ -60,7 +65,7 @@ class Reader extends AbstractBase
 	{
 		if(count($this->headers) != count($row)) {
 			if($this->debug) {
-				throw new MalformedCsvException(sprintf("Line %s has more columns than the amount of headers", $this->line));
+				throw new MalformedCsvException(sprintf("Line %s has more columns than the amount of headers", $this->getLineNumber()));
 			} else {
 				$row = array_splice($row, 0, count($this->headers)); // cut the rows if there's too many
 			}
