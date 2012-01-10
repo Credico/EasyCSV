@@ -56,4 +56,26 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 		$reader = new Reader(__DIR__.'/read.csv', array('col1', 'col2', 'col3'), ',', false);
 		$this->assertCount(6, $reader->getAll());
 	}
+	
+	/** @test */
+	public function FixedWidth()
+	{
+		$widths = array(15, 10);
+		$reader = new Reader(__DIR__.'/fixedWidth.csv', array('col1', 'col2'), ';', true, $widths);
+		
+		$expected = new \stdClass;
+    	$expected->col1 = '123456789012345';
+    	$expected->col2 = '1234567890';
+        $this->assertEquals($expected, $reader->getRow());
+
+        $expected = new \stdClass;
+    	$expected->col1 = 'a1;a2';
+    	$expected->col2 = '1234567890';
+        $this->assertEquals($expected, $reader->getRow());
+		
+        $expected = new \stdClass;
+    	$expected->col1 = '123456';
+    	$expected->col2 = 'b1;b2;b3';
+        $this->assertEquals($expected, $reader->getRow());
+	}
 }
