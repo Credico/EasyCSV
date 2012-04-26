@@ -76,7 +76,9 @@ class Reader extends AbstractBase
 	public function getRow()
 	{
 		if (($row = $this->fetchRow()) !== false) {
-			$row = $this->mapToHeaders($row);
+			$row = $this->mapToHeaders(array_map( function($key) {
+				return mb_check_encoding($key, 'UTF-8') ? $key : utf8_encode($key);
+			}, $row));
 		}
 		return $row;
 	}
