@@ -88,4 +88,13 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
         chmod(__DIR__.'/readonly.csv',0 );
         new Reader(__DIR__.'/readonly.csv', array('col1', 'col2', 'col3'), ',', false);
     }
+
+    /** @test */
+    public function ReadEscapedValues()
+    {
+        $reader = new Reader(__DIR__.'/escape.csv', array('col1', 'col2', 'col3'), ',', false);
+        list($header, $firstLine) =  $reader->getAll();
+        $this->assertEquals("A1, A2", $firstLine->col1);
+
+    }
 }
