@@ -79,12 +79,13 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $reader->getRow());
 	}
 
-    /** @test */
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     */
     public function ReadOnlyFile()
     {
         chmod(__DIR__.'/readonly.csv',0 );
-        $reader = new Reader(__DIR__.'/readonly.csv', array('col1', 'col2', 'col3'), ',', false);
-        $this->assertCount(6, $reader->getAll());
-
+        new Reader(__DIR__.'/readonly.csv', array('col1', 'col2', 'col3'), ',', false);
     }
 }

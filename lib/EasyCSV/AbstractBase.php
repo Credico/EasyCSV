@@ -14,7 +14,10 @@ abstract class AbstractBase
 			touch($path);
 		}
 		$this->delimiter = $delimiter;
-		$this->_handle = fopen($path, $mode);
+		$this->_handle = @fopen($path, $mode);
+        if( !$this->_handle ) {
+            throw new \InvalidArgumentException('You have insufficient rights to open the file ' . $path . ' in mode ' . $mode);
+        }
 	}
 
 	public function __destruct()
