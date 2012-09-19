@@ -16,7 +16,7 @@ abstract class AbstractBase
 		$this->delimiter = $delimiter;
 		$this->_handle = @fopen($path, $mode);
         if( !$this->_handle ) {
-            throw new \InvalidArgumentException('You have insufficient rights to open the file ' . $path . ' in mode ' . $mode);
+            throw new FilePermissionException('You have insufficient rights to open the file ' . $path . ' in mode ' . $mode);
         }
 	}
 
