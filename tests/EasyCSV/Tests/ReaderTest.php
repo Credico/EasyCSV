@@ -78,4 +78,14 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     	$expected->col2 = 'b1;b2;b3';
         $this->assertEquals($expected, $reader->getRow());
 	}
+
+    /**
+     * @test
+     * @expectedException \EasyCsv\FilePermissionException
+     */
+    public function ReadOnlyFile()
+    {
+        chmod(__DIR__.'/readonly.csv',0 );
+        new Reader(__DIR__.'/readonly.csv', array('col1', 'col2', 'col3'), ',', false);
+    }
 }
