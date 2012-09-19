@@ -93,8 +93,15 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function ReadEscapedValues()
     {
         $this->markTestSkipped('This test detected a possible bug in PHP, need to investigate first');
+
+        /*
+         * the fgetcsv function doesn't use the escape value when the csv has no enclose characters
+         * it should either throw an exception when no enclosures are used
+         * or it should escape the delimiter
+         */
+
         $reader = new Reader(__DIR__.'/escape.csv', array('col1', 'col2', 'col3'), ',', false);
-        list($header, $firstLine) =  $reader->getAll();
+        list($firstLine) =  $reader->getAll();
         $this->assertEquals("A1, A2", $firstLine->col1);
     }
 }
