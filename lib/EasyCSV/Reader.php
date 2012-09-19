@@ -8,6 +8,7 @@ class Reader extends AbstractBase
 	private $line = 0;
 	private $debug;
 	private $fixedWidths;
+    private $escape;
 
 	/**
 	 * @param string 	$path 		Path to the CSV file
@@ -16,19 +17,23 @@ class Reader extends AbstractBase
 	 * @param boolean	$firstLineIsHeader Ignore the first line, defaults to true
 	 * @param array		$fixedWidths Array of integers indicating the length of each column if the the csv is fixed-width. Defaults to null.
 	 */
-	public function __construct($path, array $headers, $delimiter = ',', $firstLineIsHeader = true, array $fixedWidths = null)
+	public function __construct($path, array $headers, $delimiter = ',', $firstLineIsHeader = true, array $fixedWidths = null, $escape = "\\")
 	{
-		parent::__construct($path, $delimiter, 'r+');
-		
 		if(is_array($fixedWidths) && count($headers) != count($fixedWidths) ) {
 			throw new \Exception("The number of headers doesn't match the number of fixed width columns");
 		}
+        if($delimiter == $escape) {
+            throw InvalidArgumentException("The delimiter and the escape character can't be '" . $delimiter . "' both");
+        }
+
+        parent::__construct($path, $delimiter, 'r+');
 		$this->headers = $headers;
 		$this->fixedWidths = $fixedWidths;
-		
+		$this->escape = $escape;
+
 		if($firstLineIsHeader) {
 			$this->fetchRow();
-		}
+        }
 	}
 
 	public function setDebug($bool)
@@ -51,7 +56,7 @@ class Reader extends AbstractBase
 				}
 			}
 		} else {
-			$row = fgetcsv($this->_handle, 4096, $this->delimiter, $this->enclosure);
+			$row = fgetcsv($this->_handle, 4096, $this->delimiter, $this->enclosure, $this->escape);
 		}
 		
 		if($row !== false) {
