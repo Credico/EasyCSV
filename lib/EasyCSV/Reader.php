@@ -4,6 +4,9 @@ namespace EasyCSV;
 
 class Reader extends AbstractBase
 {
+	const FIRST_LINE_IS_HEADER = true;
+	const FIRST_LINE_IS_DATA = false;
+
 	private $headers;
 	private $line = 0;
 	private $debug;
@@ -14,10 +17,10 @@ class Reader extends AbstractBase
 	 * @param string 	$path 		Path to the CSV file
 	 * @param array 	$headers	Column titles, used as the property names of the resulting objects
 	 * @param string 	$delimiter	Csv column separator
-	 * @param boolean	$firstLineIsHeader Ignore the first line, defaults to true
+	 * @param boolean	$firstLineIsHeader self::FIRST_LINE_IS_HEADER|self::FIRST_LINE_IS_DATA Ignore the first line, defaults to self::FIRST_LINE_IS_HEADER
 	 * @param array		$fixedWidths Array of integers indicating the length of each column if the the csv is fixed-width. Defaults to null.
 	 */
-	public function __construct($path, array $headers, $delimiter = ',', $firstLineIsHeader = true, array $fixedWidths = null, $escape = "\\")
+	public function __construct($path, array $headers, $delimiter = ',', $firstLineIsHeader = self::FIRST_LINE_IS_HEADER, array $fixedWidths = null, $escape = "\\")
 	{
 		if(is_array($fixedWidths) && count($headers) != count($fixedWidths) ) {
 			throw new \Exception("The number of headers doesn't match the number of fixed width columns");
@@ -31,7 +34,7 @@ class Reader extends AbstractBase
 		$this->fixedWidths = $fixedWidths;
 		$this->escape = $escape;
 
-		if($firstLineIsHeader) {
+		if($firstLineIsHeader === self::FIRST_LINE_IS_HEADER) {
 			$this->fetchRow();
         }
 	}
