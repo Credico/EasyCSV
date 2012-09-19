@@ -53,7 +53,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 	/** @test */
 	public function HeaderlessCsv()
 	{
-		$reader = new Reader(__DIR__.'/read.csv', array('col1', 'col2', 'col3'), ',', false);
+		$reader = new Reader(__DIR__.'/read.csv', array('col1', 'col2', 'col3'), ',', Reader::FIRST_LINE_IS_DATA);
 		$this->assertCount(6, $reader->getAll());
 	}
 	
@@ -61,7 +61,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 	public function FixedWidth()
 	{
 		$widths = array(15, 10);
-		$reader = new Reader(__DIR__.'/fixedWidth.csv', array('col1', 'col2'), ';', true, $widths);
+		$reader = new Reader(__DIR__.'/fixedWidth.csv', array('col1', 'col2'), ';', Reader::FIRST_LINE_IS_HEADER, $widths);
 		
 		$expected = new \stdClass;
     	$expected->col1 = '123456789012345';
@@ -86,6 +86,6 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function ReadOnlyFile()
     {
         chmod(__DIR__.'/readonly.csv',0 );
-        new Reader(__DIR__.'/readonly.csv', array('col1', 'col2', 'col3'), ',', false);
+        new Reader(__DIR__.'/readonly.csv', array('col1', 'col2', 'col3'), ',', Reader::FIRST_LINE_IS_DATA);
     }
 }
