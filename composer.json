@@ -1,0 +1,19 @@
+
+{
+	"name": "credico/easy-csv",
+	"description": "Set of PHP 5.3 classes for reading and writing CSV files",
+	"type": "library",
+	"homepage": "https://github.com/Credico/EasyCSV",
+	"license": "DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
+	"authors": [
+		{
+			"name": "Credico",
+			"homepage": "https://github.com/Credico/EasyCSV"
+		}
+	],
+	"require": { "php": ">=5.3" },
+	"autoload": {
+		"psr-0": { "EasyCSV": "lib" }
+	}
+}
+
