@@ -29,7 +29,7 @@ class Reader extends AbstractBase
             throw InvalidArgumentException("The delimiter and the escape character can't be '" . $delimiter . "' both");
         }
 
-        parent::__construct($path, $delimiter, 'r+');
+        parent::__construct($path, $delimiter, 'r');
 		$this->headers = $headers;
 		$this->fixedWidths = $fixedWidths;
 		$this->escape = $escape;

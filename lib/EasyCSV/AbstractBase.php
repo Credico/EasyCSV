@@ -10,9 +10,6 @@ abstract class AbstractBase
 
 	public function __construct($path, $delimiter = ',', $mode = 'r+')
 	{
-		if ( ! file_exists($path)) {
-			touch($path);
-		}
 		$this->delimiter = $delimiter;
 		$this->_handle = @fopen($path, $mode);
         if( !$this->_handle ) {
